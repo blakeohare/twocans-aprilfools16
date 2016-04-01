@@ -251,9 +251,9 @@ class MainScene : AbstractScene {
 					if (this.state == null) {
 						this.state = 'fall';
 					}
-					
 					switch (this.state) {
 						case 'fall':
+							activeLetter.specialMode = 'A-run';
 							activeLetter.y += 5;
 							if (activeLetter.y > GROUND_Y) {
 								activeLetter.y = GROUND_Y;
@@ -276,6 +276,7 @@ class MainScene : AbstractScene {
 								activeLetter.x = activeLetter.homeX;
 								this.mode = Mode.NONE;
 								this.state = null;
+								activeLetter.specialMode = null;
 							}
 							break;
 							

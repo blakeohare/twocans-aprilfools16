@@ -143,6 +143,17 @@ class Sprite {
 		}
 		
 		img = ImageLibrary.get('letters/black/' + letter);
+		
+		if (this.specialMode != null) {
+			switch (this.specialMode) {
+				case 'A-run':
+					img = ImageLibrary.get('letters/black/a_run_' + ((rc / 4) % 2 + 1));
+					break;
+				default:
+					break;
+			}
+		}
+		
 		img.draw(left, top);
 		this.updateBounds(img, left, top);
 	}
