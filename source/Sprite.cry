@@ -65,6 +65,18 @@ class Sprite {
 					this.dead = true;
 				}
 				break;
+			case SpriteType.BIRD:
+				if (this.specialModeCounter++ >= FPS * 2) {
+					this.specialModeCounter = -Random.randomInt(FPS);
+					this.specialMode = this.specialMode == 'left' ? 'right' : 'left';
+				}
+				
+				if (this.specialMode == 'left') {
+					this.dx = -1;
+				} else {
+					this.dx = 1;
+				}
+				break;
 			case SpriteType.CAT:
 				if (this.specialModeCounter++ >= FPS * 2) {
 					this.specialMode = ['left', 'right', 'wait'][Random.randomInt(3)];
@@ -180,7 +192,7 @@ class Sprite {
 	}
 	
 	function renderBird(rc, x, y) {
-		img = ImageLibrary.get('bird1');
+		img = ImageLibrary.get('bird' + ((rc / 3) % 2 + 1), this.isLeftFacing);
 		left = this.x - img.width / 2;
 		top = this.y - img.height;
 		img.draw(left, top);
