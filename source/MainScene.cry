@@ -537,6 +537,13 @@ class MainScene : AbstractScene {
 			letter.inversion = inversionAmount;
 		}
 		
+		if (this.mode == Mode.DONT_GET_BANNED) {
+			if ((rc / 7) % 2 == 0) {
+				img = ImageLibrary.get('messages/dont_press_g');
+				img.draw((SCREEN_WIDTH - img.width) / 2, SCREEN_HEIGHT / 2);
+			}
+		}
+		
 		x = 0;
 		y = 0;
 		if (this.drawBg != null) {
