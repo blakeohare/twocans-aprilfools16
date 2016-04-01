@@ -43,6 +43,7 @@ class MainScene : AbstractScene {
 	field activeLetter = null;
 	field queuedMode = null;
 	field tFallState = null; // { falling, pFalling, return }
+	field state = null;
 	
 	constructor() : base() {
 	
@@ -116,6 +117,7 @@ class MainScene : AbstractScene {
 	function endMode() {
 		switch (this.mode) {
 			case Mode.FALLS_DOWN:
+			case Mode.RUNS_AROUND:
 				// just wait for it to end.
 				break;
 				
@@ -240,6 +242,45 @@ class MainScene : AbstractScene {
 							
 						default:
 							assert(false, "Unknown T-Fall state:" + (this.tFallState ?? 'null'));
+							break;
+					}
+					break;
+				
+				case Mode.RUNS_AROUND:
+					activeLetter = this.letters[4];
+					if (this.state == null) {
+						this.state = 'fall';
+					}
+					
+					switch (this.state) {
+						case 'fall':
+							activeLetter.y += 5;
+							if (activeLetter.y > GROUND_Y) {
+								activeLetter.y = GROUND_Y;
+								this.state = 'run1';
+							}
+							break;
+							
+						case 'run1':
+							activeLetter.x += 5;
+							if (activeLetter.x > SCREEN_WIDTH + 50) {
+								activeLetter.x = -30;
+								activeLetter.y = LETTERS_Y;
+								this.state = 'run2';
+							}
+							break;
+							
+						case 'run2':
+							activeLetter.x += 5;
+							if (activeLetter.x > activeLetter.homeX) {
+								activeLetter.x = activeLetter.homeX;
+								this.mode = Mode.NONE;
+								this.state = null;
+							}
+							break;
+							
+						default:
+							this.state = null;
 							break;
 					}
 					break;
