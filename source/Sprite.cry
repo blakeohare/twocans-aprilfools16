@@ -65,6 +65,22 @@ class Sprite {
 					this.dead = true;
 				}
 				break;
+			case SpriteType.CAT:
+				if (this.specialModeCounter++ >= FPS * 2) {
+					this.specialMode = ['left', 'right', 'wait'][Random.randomInt(3)];
+					this.specialModeCounter = 0;
+				}
+				switch (this.specialMode) {
+					case 'left':
+						this.dx = -1;
+						break;
+					case 'right':
+						this.dx = 1;
+						break;
+					case 'wait':
+						break;
+				}
+				break;
 			default: break;
 		}
 		
@@ -152,7 +168,11 @@ class Sprite {
 	}
 	
 	function renderCat(rc, x, y) {
-		img = ImageLibrary.get('cat1');
+		path = 'cat_sitting';
+		if (this.isMoving) {
+			path = 'cat' + ((rc / 5) % 2 + 1);
+		}
+		img = ImageLibrary.get(path, this.isLeftFacing);
 		left = this.x - img.width / 2;
 		top = this.y - img.height;
 		img.draw(left, top);

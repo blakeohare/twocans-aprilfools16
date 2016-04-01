@@ -1,3 +1,4 @@
+import Audio;
 import Web;
 import Math;
 import GFX;
@@ -169,6 +170,18 @@ class MainScene : AbstractScene {
 		}
 	}
 	
+	
+	static field soundResources = {};
+	
+	function playSound(type) {
+		snd = MainScene.soundResources.get(type);
+		if (snd == null) {
+			snd = Audio.SoundResource.loadFromResource('sounds/' + type + '.ogg');
+			MainScene.soundResources[type] = snd;
+		}
+		snd.play();
+	}
+	
 	function update(events) {
 		
 		if (this.mode == Mode.NONE && this.queuedMode != null) {
@@ -208,6 +221,12 @@ class MainScene : AbstractScene {
 									this.changePerson();
 								}
 							}
+						} else if (sprite.type == SpriteType.CAT) {
+							this.playSound('cat');
+						} else if (sprite.type == SpriteType.BIRD) {
+							this.playSound('bird');
+						} else if (sprite.type == SpriteType.TREE) {
+							this.playSound('tree');
 						}
 					}
 				}
