@@ -53,6 +53,7 @@ class MainScene : AbstractScene {
 	
 		this.person = new Sprite(SpriteType.PERSON, SCREEN_WIDTH / 2, GROUND_Y);
 		this.person.canHitTest = true;
+		this.person.personFlavor = Sprite.PERSON_FLAVORS[0];
 		
 		this.restoreLetters();
 	}
@@ -90,7 +91,7 @@ class MainScene : AbstractScene {
 			sprite.letter = c;
 			sprite.canHitTest = c != '&';
 			x += SCREEN_WIDTH * 2 / (chars.length * 3);
-			if (i == 0) x -= 8;
+			if (i == 0) x -= 6;
 			if (i == 1) x += 12;
 			if (i == 6) x += 8;
 			if (c == '&') x += 8;
@@ -106,13 +107,23 @@ class MainScene : AbstractScene {
 		return false;
 	}
 	
+	function changePerson() {
+		this.person.personFlavorIndex++;
+		this.person.personFlavor = Sprite.PERSON_FLAVORS[this.person.personFlavorIndex % Sprite.PERSON_FLAVORS.length];
+		this.otherSprites.add(new Sprite(SpriteType.SMOKE, this.person.x, this.person.y));
+		this.mode = Mode.NONE;
+		this.queuedMode = null;
+		this.person.specialMode = null;
+		this.person.specialModeCounter = FPS * 3 / 2;
+	}
+	
 	// previous mode is guaranteed to be over
 	function launchMode(mode) {
 		switch (this.mode) {
 			case Mode.FALLS_DOWN:
 				this.tFallState = 'falling';
 				break;
-				
+			
 			case Mode.SHIVERS:
 				break;
 		}
@@ -138,7 +149,6 @@ class MainScene : AbstractScene {
 				}
 				this.mode = Mode.NONE;
 				break;
-				
 				
 			default:
 				this.mode = Mode.NONE;
@@ -181,6 +191,9 @@ class MainScene : AbstractScene {
 									this.endMode(); // end the current mode
 								}
 								this.queuedMode = sprite.letterMode; // queue up the next mode.
+								if (this.queuedMode == Mode.PERSON_CHANGES) {
+									this.changePerson();
+								}
 							}
 						}
 					}

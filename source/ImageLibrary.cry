@@ -21,7 +21,7 @@ class ImageLibrary {
 				img = ImageLoader.fromResource(rpath).getImage();
 				if (!rpath.startsWith('images/letters/')) {
 					scale = 2;
-					if (rpath.contains('running_char')) {
+					if (rpath.contains('running_char') || rpath.contains('smoke')) {
 						scale = 3;
 					}
 					img = img.scale(img.width * scale, img.height * scale);
