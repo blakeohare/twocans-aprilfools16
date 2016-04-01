@@ -44,6 +44,7 @@ class MainScene : AbstractScene {
 	field queuedMode = null;
 	field tFallState = null; // { falling, pFalling, return }
 	field state = null;
+	field stateCounter = 0;
 	field totoro = null;
 	field drawBg = null;
 	field mouseX = SCREEN_WIDTH / 2;
@@ -132,6 +133,7 @@ class MainScene : AbstractScene {
 	// each mode is responsible for setting this.mode = Mode.NONE, as it may be asynchronous.
 	function endMode() {
 		switch (this.mode) {
+			case Mode.BOMB_EXPLODES:
 			case Mode.FALLS_DOWN:
 			case Mode.RUNS_AROUND:
 			case Mode.TOTORO:
@@ -229,6 +231,70 @@ class MainScene : AbstractScene {
 		
 		if (this.mode != null) {
 			switch (this.mode) {
+				
+				case Mode.BOMB_EXPLODES:
+					if (this.state == null) {
+						this.state = 'fuse';
+						this.stateCounter = 0;
+					}
+					activeLetter = this.letters[2];
+					
+					switch (this.state) {
+						case 'fuse':
+							activeLetter.specialMode = 'O-bomb';
+							if (this.stateCounter == FPS * 2) {
+								this.state = 'out';
+								this.stateCounter = 0;
+								activeLetter.specialMode = null;
+							}
+							break;
+						
+						case 'out':
+							for (i = 0; i < this.letters.length; ++i) {
+								letter = this.letters[i];
+								x = 16;
+								y = 16;
+								if (i % 2 == 1) x *= -1;
+								if (i % 3 == 1) y *= -1;
+								letter.x += x;
+								letter.y += y;
+							}
+							if (this.stateCounter == FPS) {
+								this.state = 'in';
+								this.stateCounter = 0;
+							}
+							break;
+						
+						case 'in':
+							done = false;
+							for (letter : this.letters) {
+								if (letter.x == letter.homeX) {
+									done = true;
+									break;
+								}
+								
+								if (letter.x < letter.homeX) {
+									letter.x += 16;
+								} else {
+									letter.x -= 16;
+								}
+								
+								if (letter.y < letter.homeY) {
+									letter.y += 16;
+								} else {
+									letter.y -= 16;
+								}
+							}
+							
+							if (done) {
+								this.mode = Mode.NONE;
+								this.state = null;
+							}
+							break;
+					}
+					
+					this.stateCounter++;
+					break;
 				
 				case Mode.FALLS_DOWN:
 					
