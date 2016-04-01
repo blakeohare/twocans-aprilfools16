@@ -47,6 +47,7 @@ class MainScene : AbstractScene {
 	field stateCounter = 0;
 	field totoro = null;
 	field drawBg = null;
+	field happyBg = null;
 	field mouseX = SCREEN_WIDTH / 2;
 	field mouseY = SCREEN_HEIGHT / 2;
 	
@@ -124,9 +125,6 @@ class MainScene : AbstractScene {
 			case Mode.FALLS_DOWN:
 				this.tFallState = 'falling';
 				break;
-			
-			case Mode.SHIVERS:
-				break;
 		}
 	}
 	
@@ -144,7 +142,14 @@ class MainScene : AbstractScene {
 				this.mode = Mode.NONE;
 				this.drawBg = null;
 				break;
-				
+			
+			case Mode.SCENERY:
+				this.happyBg = null;
+				this.otherSprites.clear();
+				this.sprites = null;
+				this.mode = Mode.NONE;
+				break;
+			
 			case Mode.SHIVERS:
 				for (letter : this.letters) {
 					letter.renderOffsetXY = null;
@@ -208,10 +213,7 @@ class MainScene : AbstractScene {
 				}
 				
 				switch (this.mode) {
-					case Mode.SCENERY:
-						// TODO: process scenery events
-						break;
-						
+					
 					case Mode.DRAW_ON_SCREEN:
 						
 						if (this.drawBg == null) {
@@ -446,6 +448,13 @@ class MainScene : AbstractScene {
 					}
 					break;
 				
+				case Mode.SCENERY:
+					if (this.happyBg == null) {
+						this.happyBg = new HappyBackground();
+					}
+					this.happyBg.update(this);
+					break;
+				
 				case Mode.SHIVERS:
 					for (i = 0; i < this.letters.length; ++i) {
 						letter = this.letters[i];
@@ -519,9 +528,8 @@ class MainScene : AbstractScene {
 	
 	function getAllSprites() {
 		if (this.sprites == null) {
-			this.sprites = [this.person];
-			this.sprites.concat(this.letters);
-			this.sprites.concat(this.otherSprites);
+			this.sprites = this.letters + this.otherSprites;
+			this.sprites.add(this.person);
 		}
 		return this.sprites;
 	}
@@ -583,6 +591,9 @@ class MainScene : AbstractScene {
 			x = 20;
 			y = -8;
 		} else {
+			if (this.happyBg != null) {
+				this.happyBg.render();
+			}
 			x = 6;
 			cursor = ImageLibrary.get('cursor1', true);
 		}

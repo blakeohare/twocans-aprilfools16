@@ -6,6 +6,9 @@ enum SpriteType {
 	PERSON,
 	TOTORO,
 	SMOKE,
+	CAT,
+	BIRD,
+	TREE,
 }
 
 class Sprite {
@@ -139,7 +142,37 @@ class Sprite {
 				return this.renderTotoro(rc, x, y);
 			case SpriteType.SMOKE:
 				return this.renderSmoke(rc, x, y);
+			case SpriteType.CAT:
+				return this.renderCat(rc, x, y);
+			case SpriteType.BIRD:
+				return this.renderBird(rc, x, y);
+			case SpriteType.TREE:
+				return this.renderTree(rc, x, y);
 		}
+	}
+	
+	function renderCat(rc, x, y) {
+		img = ImageLibrary.get('cat1');
+		left = this.x - img.width / 2;
+		top = this.y - img.height;
+		img.draw(left, top);
+		this.updateBounds(img, left, top);
+	}
+	
+	function renderBird(rc, x, y) {
+		img = ImageLibrary.get('bird1');
+		left = this.x - img.width / 2;
+		top = this.y - img.height;
+		img.draw(left, top);
+		this.updateBounds(img, left, top);
+	}
+	
+	function renderTree(rc, x, y) {
+		img = ImageLibrary.get('tree');
+		left = this.x - img.width / 2;
+		top = this.y - img.height;
+		img.draw(left, top);
+		this.updateBounds(img, left, top);
 	}
 	
 	function renderSmoke(rc, x, y) {

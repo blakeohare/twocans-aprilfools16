@@ -1,0 +1,53 @@
+import GFX;
+import Random;
+
+
+class HappyBackground {
+	
+	field counter = 0;
+	field sprites = [SpriteType.CAT] * 3 + [SpriteType.BIRD] * 3 + [SpriteType.TREE] * 4;
+	
+	constructor() {
+		this.sprites.shuffle();
+	}
+	
+	function update(scene) {
+		this.counter++;
+		
+		if (this.counter > 1 && this.counter % FPS == 0 && this.sprites.length > 0) {
+			spriteType = this.sprites[0];
+			this.sprites = this.sprites[1:];
+			mode = null;
+			switch (spriteType) {
+				case SpriteType.CAT:
+					x = Random.randomInt(100, SCREEN_WIDTH - 100);
+					y = GROUND_Y;
+					modes = ['wait', 'left', 'right'];
+					modes.shuffle();
+					mode = modes[0];
+					break;
+				case SpriteType.TREE:
+					x = Random.randomInt(0, SCREEN_WIDTH);
+					y = GROUND_Y;
+					break;
+				case SpriteType.BIRD:
+					x = Random.randomInt(200, SCREEN_WIDTH - 200);
+					y = Random.randomInt(50, GROUND_Y - 150);
+					mode = Random.randomBool() ? 'left' : 'right';
+					break;
+			}
+			
+			sprite = new Sprite(spriteType, x, y);
+			sprite.specialModeCounter = Random.randomInt(FPS * 2);
+			sprite.specialMode = mode;
+			sprite.canHitTest = true;
+			
+			scene.otherSprites.add(sprite);
+			scene.sprites = null;
+		}
+	}
+	
+	function render() {
+		
+	}
+}
