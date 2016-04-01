@@ -46,6 +46,8 @@ class MainScene : AbstractScene {
 	field state = null;
 	field totoro = null;
 	field drawBg = null;
+	field mouseX = SCREEN_WIDTH / 2;
+	field mouseY = SCREEN_HEIGHT / 2;
 	
 	constructor() : base() {
 	
@@ -154,6 +156,10 @@ class MainScene : AbstractScene {
 		}
 		
 		for (event : events) {
+			if (event.type == EventType.MOUSE_MOVE) {
+				this.mouseX = event.x;
+				this.mouseY = event.y;
+			}
 			if (!this.isModeLocked()) {
 				if (event.type == EventType.MOUSE_LEFT_DOWN && this.queuedMode == null) {
 					sprite = this.hitTestSprites(event.x, event.y);
@@ -335,7 +341,7 @@ class MainScene : AbstractScene {
 						this.sprites = null;
 					}
 					
-					this.totoro.x -= 10;
+					this.totoro.x -= 7;
 					
 					// remove sprite from scene once it falls off the left side of the screen.
 					if (this.totoro.x < -30) {
@@ -392,12 +398,23 @@ class MainScene : AbstractScene {
 	function render(rc) {
 		GFX.Draw.fill(255, 255, 255);
 		
-		if (this.drawBg != null) {
-			this.drawBg.render();
-		}
-		
 		for (sprite : this.getAllSprites()) {
 			sprite.render(rc);
 		}
+		
+		x = 0;
+		y = 0;
+		if (this.drawBg != null) {
+			this.drawBg.render();
+			cursor = ImageLibrary.get('cursor2', true);
+			x = 20;
+			y = -8;
+		} else {
+			x = 6;
+			cursor = ImageLibrary.get('cursor1', true);
+		}
+		
+		cursor.draw(this.mouseX - cursor.width / 2 + x, this.mouseY - 3 + y);
+		
 	}
 }

@@ -19,8 +19,12 @@ class ImageLibrary {
 					rpath += '.png';
 				}
 				img = ImageLoader.fromResource(rpath).getImage();
-				if (rpath.startsWith('images/characters/')) {
-					img = img.scale(img.width * 2, img.height * 2);
+				if (!rpath.startsWith('images/letters/')) {
+					scale = 2;
+					if (rpath.contains('running_char')) {
+						scale = 3;
+					}
+					img = img.scale(img.width * scale, img.height * scale);
 				}
 			}
 			lookup[path] = img;
