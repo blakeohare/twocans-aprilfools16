@@ -32,6 +32,7 @@ class Sprite {
 	field isFrozen = false;
 	field dead = false;
 	field lifetime = 0;
+	field inversion = 0;
 	
 	static field PERSON_FLAVORS = 'person1 person2 person3 person4'.split(' ');
 	
@@ -190,6 +191,12 @@ class Sprite {
 		}
 		
 		img.draw(left, top);
+		
+		if (this.inversion > 0) {
+			img = ImageLibrary.get('letters/white/' + letter);
+			img.drawWithAlpha(left, top, this.inversion);
+		}
+		
 		this.updateBounds(img, left, top);
 	}
 	

@@ -151,7 +151,12 @@ class MainScene : AbstractScene {
 				}
 				this.mode = Mode.NONE;
 				break;
-				
+			
+			case Mode.INVERT_COLORS:
+				this.state = 'out';
+				this.stateCounter = 0;
+				break;
+			
 			default:
 				this.mode = Mode.NONE;
 				break;
@@ -354,6 +359,34 @@ class MainScene : AbstractScene {
 					}
 					break;
 				
+				case Mode.INVERT_COLORS:
+					if (this.state == null) {
+						this.state = 'in';
+						this.stateCounter = 0;
+					}
+					
+					switch (this.state) {
+						case 'in':
+							if (this.stateCounter > FPS) {
+								this.state = 'inverted';
+								this.stateCounter = 0;
+							}
+							break;
+							
+						case 'inverted':
+							// do nothing.
+							break;
+						
+						case 'out':
+							if (this.stateCounter > FPS) {
+								this.state = null;
+								this.mode = Mode.NONE;
+							}
+							break;
+					}
+					this.stateCounter++;
+					break;
+				
 				case Mode.RUNS_AROUND:
 					activeLetter = this.letters[4];
 					if (this.state == null) {
@@ -475,7 +508,34 @@ class MainScene : AbstractScene {
 	}
 	
 	function render(rc) {
-		GFX.Draw.fill(255, 255, 255);
+		if (this.mode == Mode.INVERT_COLORS) {
+			inversionAmount = 0;
+			if (this.state != null) {
+				switch (this.state) {
+					case 'in':
+						inversionAmount = 255 * this.stateCounter / FPS;
+						break;
+					case 'inverted':
+						inversionAmount = 255;
+						break;
+					case 'out':
+						inversionAmount = 255 - 255 * this.stateCounter / FPS;
+						break;
+					default:
+						break;
+				}
+			}
+			inversionAmount = ensureRange(inversionAmount, 0, 255);
+			c = 255 - inversionAmount;
+			GFX.Draw.fill(c, c, c);
+		} else {
+			inversionAmount = 0;
+			GFX.Draw.fill(255, 255, 255);
+		}
+		
+		for (letter : this.letters) {
+			letter.inversion = inversionAmount;
+		}
 		
 		x = 0;
 		y = 0;
