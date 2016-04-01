@@ -1,0 +1,49 @@
+const DRAW_BG_WIDTH = 50;
+const DRAW_BG_HEIGHT = 30;
+
+const DRAW_BG_TILE_WIDTH = SCREEN_WIDTH / DRAW_BG_WIDTH + 1;
+const DRAW_BG_TILE_HEIGHT = SCREEN_HEIGHT / DRAW_BG_HEIGHT + 1;
+
+class DrawingBackground {
+	field cells;
+	field cols = [];
+	field rows = [];
+	field xCoords = [];
+	field yCoords = [];
+	field isPressed = false;
+	
+	constructor() {
+		this.cells = [];
+		while (this.cells.length < DRAW_BG_WIDTH) {
+			this.cells.add([false] * DRAW_BG_HEIGHT);
+		}
+		
+		for (x = 0; x < DRAW_BG_WIDTH; ++x) {
+			this.cols.add(x);
+			this.xCoords.add(x * SCREEN_WIDTH / DRAW_BG_WIDTH);
+		}
+		for (y = 0; y < DRAW_BG_HEIGHT; ++y) {
+			this.rows.add(y);
+			this.yCoords.add(y * SCREEN_HEIGHT / DRAW_BG_HEIGHT);
+		}
+	}
+	
+	function draw(px, py) {
+		x = Math.ensureRange(px * DRAW_BG_WIDTH / SCREEN_WIDTH, 0, DRAW_BG_WIDTH - 1);
+		y = Math.ensureRange(py * DRAW_BG_HEIGHT / SCREEN_HEIGHT, 0, DRAW_BG_HEIGHT - 1);
+		this.cells[x][y] = true;
+	}
+	
+	function render() {
+		for (x : this.cols) {
+			col = this.cells[x];
+			xCoord = this.xCoords[x];
+			for (y : this.rows) {
+				if (col[y]) {
+					yCoord = this.yCoords[y];
+					GFX.Draw.rectangle(xCoord, yCoord, DRAW_BG_TILE_WIDTH, DRAW_BG_TILE_HEIGHT, 80, 120, 255);
+				}
+			}
+		}
+	}
+}

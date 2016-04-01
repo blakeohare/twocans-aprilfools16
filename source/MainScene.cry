@@ -45,6 +45,7 @@ class MainScene : AbstractScene {
 	field tFallState = null; // { falling, pFalling, return }
 	field state = null;
 	field totoro = null;
+	field drawBg = null;
 	
 	constructor() : base() {
 	
@@ -123,6 +124,11 @@ class MainScene : AbstractScene {
 			case Mode.TOTORO:
 				// just wait for it to end.
 				break;
+			
+			case Mode.DRAW_ON_SCREEN:
+				this.mode = Mode.NONE;
+				this.drawBg = null;
+				break;
 				
 			case Mode.SHIVERS:
 				for (letter : this.letters) {
@@ -180,7 +186,18 @@ class MainScene : AbstractScene {
 						break;
 						
 					case Mode.DRAW_ON_SCREEN:
-						// TODO: process draw events
+						
+						if (event.type == EventType.MOUSE_MOVE) {
+							if (this.drawBg.isPressed) {
+								this.drawBg.draw(event.x, event.y);
+							}
+						} else if (event.type == EventType.MOUSE_LEFT_DOWN) {
+							this.drawBg.draw(event.x, event.y);
+							this.drawBg.isPressed = true;
+						} else if (event.type == EventType.MOUSE_LEFT_UP) {
+							this.drawBg.isPressed = false;
+						}
+						
 						break;
 					
 					default: break;
@@ -190,6 +207,12 @@ class MainScene : AbstractScene {
 		
 		if (this.mode != null) {
 			switch (this.mode) {
+				
+				case Mode.DRAW_ON_SCREEN:
+					if (this.drawBg == null) {
+						this.drawBg = new DrawingBackground();
+					}
+					break;
 				
 				case Mode.FALLS_DOWN:
 					
@@ -371,6 +394,10 @@ class MainScene : AbstractScene {
 	
 	function render(rc) {
 		GFX.Draw.fill(255, 255, 255);
+		
+		if (this.drawBg != null) {
+			this.drawBg.render();
+		}
 		
 		for (sprite : this.getAllSprites()) {
 			sprite.render(rc);
