@@ -565,6 +565,8 @@ class MainScene : AbstractScene {
 			if (this.stateCounter < 2.5 * FPS) {
 				msg = ImageLibrary.get('messages/credits' + this.state);
 			}
+		} else if (this.mode == Mode.BANNED) {
+			msg = ImageLibrary.get('messages/banned');
 		}
 		
 		if (msg != null) {
