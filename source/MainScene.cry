@@ -398,10 +398,6 @@ class MainScene : AbstractScene {
 	function render(rc) {
 		GFX.Draw.fill(255, 255, 255);
 		
-		for (sprite : this.getAllSprites()) {
-			sprite.render(rc);
-		}
-		
 		x = 0;
 		y = 0;
 		if (this.drawBg != null) {
@@ -412,6 +408,10 @@ class MainScene : AbstractScene {
 		} else {
 			x = 6;
 			cursor = ImageLibrary.get('cursor1', true);
+		}
+		
+		for (sprite : this.getAllSprites()) {
+			sprite.render(rc);
 		}
 		
 		cursor.draw(this.mouseX - cursor.width / 2 + x, this.mouseY - 3 + y);
