@@ -42,6 +42,7 @@ class MainScene : AbstractScene {
 	field otherSprites = [];
 	field activeLetter = null;
 	field queuedMode = null;
+	field tFallState = null; // { falling, pFalling, return }
 	
 	constructor() : base() {
 	
@@ -102,6 +103,10 @@ class MainScene : AbstractScene {
 	// previous mode is guaranteed to be over
 	function launchMode(mode) {
 		switch (this.mode) {
+			case Mode.FALLS_DOWN:
+				this.tFallState = 'falling';
+				break;
+				
 			case Mode.SHIVERS:
 				break;
 		}
@@ -176,6 +181,64 @@ class MainScene : AbstractScene {
 		if (this.mode != null) {
 			switch (this.mode) {
 				
+				case Mode.FALLS_DOWN:
+					
+					if (this.tFallState == null) this.tFallState = 'falling';
+					switch (this.tFallState) {
+						case 'falling':
+							if (abs(this.letters[0].y - GROUND_Y) < 10) {
+								if (abs(this.letters[0].x - this.person.x) < 20) {
+									this.tFallState = 'pFalling';
+									this.person.isFrozen = true;
+									this.person.specialMode = null;
+								}
+							}
+							
+							this.letters[0].y += 8;
+							if (this.letters[0].y > SCREEN_HEIGHT + 100) {
+								this.letters[0].y = -100;
+								this.tFallState = 'return';
+							}
+							
+							break;
+							
+						case 'pFalling':
+							this.letters[0].y += 12;
+							this.person.y += 8;
+							if (this.letters[0].y > SCREEN_HEIGHT + 100) {
+								this.letters[0].y = -100;
+								this.person.y = -100;
+								this.tFallState = 'return';
+							}
+							break;
+							
+						case 'return':
+							this.letters[0].y += 4;
+							letterBack = false;
+							if (this.letters[0].y > this.letters[0].homeY) {
+								this.letters[0].y = this.letters[0].homeY;
+								letterBack = true;
+							}
+							if (this.person.isFrozen) {
+								this.person.y += 4;
+								if (this.person.y > GROUND_Y) {
+									this.person.y = GROUND_Y;
+									this.person.isFrozen = false;
+								}
+							}
+							
+							if (letterBack && !this.person.isFrozen) {
+								this.tFallState = null;
+								this.mode = Mode.NONE;
+							}
+							break;
+							
+						default:
+							assert(false, "Unknown T-Fall state:" + (this.tFallState ?? 'null'));
+							break;
+					}
+					break;
+				
 				case Mode.SHIVERS:
 					for (i = 0; i < this.letters.length; ++i) {
 						letter = this.letters[i];
@@ -193,7 +256,6 @@ class MainScene : AbstractScene {
 						letter.renderOffsetXY[1] = y;
 					}
 					break;
-			
 			}
 		}
 		

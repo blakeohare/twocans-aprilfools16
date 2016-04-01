@@ -24,6 +24,9 @@ class Sprite {
 	field letter;
 	field lastImageBounds = null;
 	field renderOffsetXY = null;
+	field homeX;
+	field homeY;
+	field isFrozen = false;
 	
 	static field PERSON_FLAVORS = 'person1 person2 person3 person4'.split(' ');
 	
@@ -31,6 +34,8 @@ class Sprite {
 		this.type = type;
 		this.x = x;
 		this.y = y;
+		this.homeX = x;
+		this.homeY = y;
 	}
 	
 	function update(scene) {
@@ -69,7 +74,10 @@ class Sprite {
 	}
 	
 	function updatePerson(scene) {
-	
+		if (this.isFrozen)
+			return;
+		
+		
 		if (this.x < -50) this.x = SCREEN_WIDTH + 45;
 		if (this.x > SCREEN_WIDTH + 50) this.x = -45;
 		
