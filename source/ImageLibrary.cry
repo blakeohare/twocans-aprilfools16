@@ -24,6 +24,9 @@ class ImageLibrary {
 					if (rpath.contains('running_char') || rpath.contains('smoke')) {
 						scale = 3;
 					}
+					if (rpath.contains('/todo.png')) {
+						scale = 1;
+					}
 					img = img.scale(img.width * scale, img.height * scale);
 				}
 			}

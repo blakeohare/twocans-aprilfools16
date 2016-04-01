@@ -567,6 +567,8 @@ class MainScene : AbstractScene {
 			}
 		} else if (this.mode == Mode.BANNED) {
 			msg = ImageLibrary.get('messages/banned');
+		} else if (this.mode == Mode.TODO_IMPLEMENT) {
+			msg = ImageLibrary.get('messages/todo');
 		}
 		
 		if (msg != null) {
