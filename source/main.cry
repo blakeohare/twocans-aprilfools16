@@ -31,7 +31,6 @@ function main() {
 		
 		activeScene.render(rc++);
 		
-		
 		window.clockTick();
 	}
 }

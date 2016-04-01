@@ -30,7 +30,7 @@ enum LetterFallModes {
 	BOTH_BACK,
 }
 
-const GROUND_Y = SCREEN_HEIGHT * 2 / 3;
+const GROUND_Y = SCREEN_HEIGHT * 3 / 4;
 const LETTERS_Y = SCREEN_HEIGHT / 3;
 
 class MainScene : AbstractScene {
@@ -84,6 +84,11 @@ class MainScene : AbstractScene {
 			sprite.letter = c;
 			sprite.canHitTest = c != '&';
 			x += SCREEN_WIDTH * 2 / (chars.length * 3);
+			if (i == 0) x -= 8;
+			if (i == 1) x += 12;
+			if (i == 6) x += 8;
+			if (c == '&') x += 8;
+			if (c == 'I') x -= 16;
 			this.letters.add(sprite);
 		}
 	}

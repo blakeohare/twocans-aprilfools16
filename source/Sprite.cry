@@ -21,6 +21,7 @@ class Sprite {
 	field dy = 0;
 	field isMoving = false;
 	field personFlavor = 'person1';
+	field letter;
 	
 	static field PERSON_FLAVORS = 'person1 person2 person3 person4'.split(' ');
 	
@@ -108,10 +109,14 @@ class Sprite {
 	
 	function renderBlake(rc, x, y) {
 		isWalk = this.isMoving && ( (rc / 2) % 2) == 0;
-		ImageLibrary.get('characters/' + this.personFlavor + '_' + (isWalk ? 'stand' : 'walk'), this.isLeftFacing);
+		img = ImageLibrary.get('characters/' + this.personFlavor + '_' + (isWalk ? 'stand' : 'walk'), this.isLeftFacing);
+		img.draw(x - 30, y - img.height);
 	}
 	
 	function renderLetter(rc, x, y) {
-		GFX.Draw.rectangle(x, y, 50, 50, 40, 40, 40);
+		letter = this.letter.lower();
+		if (letter == '&') letter = 'amp';
+		img = ImageLibrary.get('letters/black/' + letter);
+		img.draw(x - 30, y - 30);
 	}
 }
