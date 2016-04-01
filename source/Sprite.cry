@@ -23,6 +23,7 @@ class Sprite {
 	field personFlavor = 'person1';
 	field letter;
 	field lastImageBounds = null;
+	field renderOffsetXY = null;
 	
 	static field PERSON_FLAVORS = 'person1 person2 person3 person4'.split(' ');
 	
@@ -127,6 +128,12 @@ class Sprite {
 		if (letter == '&') letter = 'amp';
 		left = x - 30;
 		top = y - 30;
+		
+		if (this.renderOffsetXY != null) {
+			left += this.renderOffsetXY[0];
+			top += this.renderOffsetXY[1];
+		}
+		
 		img = ImageLibrary.get('letters/black/' + letter);
 		img.draw(left, top);
 		this.updateBounds(img, left, top);

@@ -99,30 +99,61 @@ class MainScene : AbstractScene {
 		return false;
 	}
 	
+	// previous mode is guaranteed to be over
 	function launchMode(mode) {
-		
+		switch (this.mode) {
+			case Mode.SHIVERS:
+				break;
+		}
 	}
 	
+	// each mode is responsible for setting this.mode = Mode.NONE, as it may be asynchronous.
 	function endMode() {
-		
+		switch (this.mode) {
+			case Mode.SHIVERS:
+				for (letter : this.letters) {
+					letter.renderOffsetXY = null;
+				}
+				this.mode = Mode.NONE;
+				break;
+				
+			default:
+				this.mode = Mode.NONE;
+				break;
+		}
 	}
 	
 	function update(events) {
+		
+		if (this.mode == Mode.NONE && this.queuedMode != null) {
+			this.launchMode(this.queuedMode);
+			this.mode = this.queuedMode;
+			this.queuedMode = null;
+			this.modeCounter = 0;
+		}
+		
 		for (event : events) {
 			if (!this.isModeLocked()) {
-				if (event.type == EventType.MOUSE_LEFT_DOWN) {
+				if (event.type == EventType.MOUSE_LEFT_DOWN && this.queuedMode == null) {
 					sprite = this.hitTestSprites(event.x, event.y);
 					if (sprite != null) {
 						if (sprite.type == SpriteType.PERSON) {
 							Web.launchBrowser('http://twocansandstring.com');
 						} else if (sprite.type == SpriteType.LETTER) {
+							// clicked the same letter
 							if (this.mode == sprite.letterMode) {
 								if (this.mode == Mode.NONE) {
-									this.launchMode(sprite.letterMode);
+									// do nothing
 								} else {
+									// end this mode.
 									this.endMode();
-									this.queuedMode = sprite.letterMode;
+									this.queuedMode = Mode.NONE;
 								}
+							} else { // clicked another letter
+								if (this.mode != Mode.NONE) {
+									this.endMode(); // end the current mode
+								}
+								this.queuedMode = sprite.letterMode; // queue up the next mode.
 							}
 						}
 					}
@@ -142,9 +173,35 @@ class MainScene : AbstractScene {
 			}
 		}
 		
+		if (this.mode != null) {
+			switch (this.mode) {
+				
+				case Mode.SHIVERS:
+					for (i = 0; i < this.letters.length; ++i) {
+						letter = this.letters[i];
+						if (letter.renderOffsetXY == null) {
+							letter.renderOffsetXY = [0, 0];
+						}
+						
+						t = this.modeCounter * Math.PI * 2 / FPS * 5;
+						value = floor(Math.sin(t) * 3);
+						x = value;
+						y = value;
+						if (i % 3 == 2) x *= -1;
+						if (i % 2 == 1) y *= -1;
+						letter.renderOffsetXY[0] = x;
+						letter.renderOffsetXY[1] = y;
+					}
+					break;
+			
+			}
+		}
+		
 		for (sprite : this.getAllSprites()) {
 			sprite.update(this);
 		}
+		
+		this.modeCounter++;
 	}
 	
 	function hitTestSprites(x, y) {
