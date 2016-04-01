@@ -1,0 +1,117 @@
+import Math;
+import GFX;
+
+enum SpriteType {
+	LETTER,
+	BLAKE,
+}
+
+class Sprite {
+	
+	field type;
+	field x;
+	field y;
+	field letterMode;
+	field canHitTest = false;
+	field specialMode = null;
+	field specialModeCounter = 0;
+	field isSleeping = false;
+	field isLeftFacing = false;
+	field dx = 0;
+	field dy = 0;
+	field isMoving = false;
+	field personFlavor = 'person1';
+	
+	static field PERSON_FLAVORS = 'person1 person2 person3 person4'.split(' ');
+	
+	constructor(type, x, y) {
+		this.type = type;
+		this.x = x;
+		this.y = y;
+	}
+	
+	function update(scene) {
+		switch (this.type) {
+			case SpriteType.BLAKE:
+				this.updateBlake(scene);
+				break;
+			case SpriteType.LETTER:
+				this.updateLetter(scene);
+				break;
+		}
+		
+		if (this.dx != 0) {
+			this.isLeftFacing = this.dx < 0;
+		}
+		
+		this.isMoving = this.dx != 0 || this.dy != 0;
+		
+		this.x += this.dx;
+		this.y += this.dy;
+		this.dx = 0;
+		this.dy = 0;
+	}
+	
+	static field BLAKE_MODES = [
+		'left',
+		'right',
+		'left',
+		'right',
+		'sleep',
+		null,
+	];
+	
+	function updateLetter(scene) {
+		
+	}
+	
+	function updateBlake(scene) {
+		if (this.specialMode != null) {
+			switch (this.specialMode) {
+				case 'left':
+					this.dx = -3;
+					break;
+				
+				case 'right':
+					this.dx = 3;
+					break;
+					
+				case 'sleep':
+					this.isSleeping = true;
+					break;
+			}
+		}
+		
+		if (this.specialModeCounter++ >= FPS * 2) {
+			this.isSleeping = false;
+			this.changeBlakeMode();
+		}
+	}
+	
+	function changeBlakeMode() {
+		Sprite.BLAKE_MODES.shuffle();
+		this.specialModeCounter = 0;
+		this.specialMode = Sprite.BLAKE_MODES[0];
+	}
+	
+	function render(rc) {
+		x = floor(this.x);
+		y = floor(this.y);
+		
+		switch (this.type) {
+			case SpriteType.BLAKE:
+				return this.renderBlake(rc, x, y);
+			case SpriteType.LETTER:
+				return this.renderLetter(rc, x, y);
+		}
+	}
+	
+	function renderBlake(rc, x, y) {
+		isWalk = this.isMoving && ( (rc / 2) % 2) == 0;
+		ImageLibrary.get('characters/' + this.personFlavor + '_' + (isWalk ? 'stand' : 'walk'), this.isLeftFacing);
+	}
+	
+	function renderLetter(rc, x, y) {
+		GFX.Draw.rectangle(x, y, 50, 50, 40, 40, 40);
+	}
+}

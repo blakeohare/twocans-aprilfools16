@@ -1,0 +1,16 @@
+class AbstractScene  {
+	
+	field next;
+	
+	constructor() {
+		this.next = this;
+	}
+	
+	function update(events) {
+		assert(false);
+	}
+	
+	function render(rc) {
+		assert(false);
+	}
+}

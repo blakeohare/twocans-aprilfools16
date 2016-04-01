@@ -1,0 +1,37 @@
+import Game;
+
+const FPS = 30;
+const SCREEN_WIDTH = 800;
+const SCREEN_HEIGHT = 500;
+
+function main() {
+	window = new Game.GameWindow('Two Cans & String', 30, SCREEN_WIDTH, SCREEN_HEIGHT);
+	
+	rc = 0;
+	activeScene = new LoadingScene();
+	events = [];
+	while (true) {
+		
+		events.clear();
+		for (event : window.pumpEvents()) {
+			switch (event.type) {
+				case EventType.MOUSE_LEFT_DOWN:
+				case EventType.MOUSE_LEFT_UP:
+				case EventType.MOUSE_MOVE:
+					events.add(event);
+					break;
+					
+				// still going to test this in a C# instance.
+				case EventType.QUIT:
+					return;
+			}
+		}
+		
+		activeScene.update(events);
+		
+		activeScene.render(rc++);
+		
+		
+		window.clockTick();
+	}
+}

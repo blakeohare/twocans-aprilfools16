@@ -1,0 +1,35 @@
+import Math;
+import GFX;
+
+class LoadingScene : AbstractScene {
+	field loader;
+	field bg = null;
+	field counter = 0;
+	
+	constructor() : base() {
+		this.loader = GFX.ImageSheetLoader.fromIds('everything');
+	}
+	
+	function update(events) {
+		if (this.loader.isDone()) {
+			this.bg = new MainScene();
+		}
+		
+		if (this.bg != null) {
+			this.counter++;
+			if (this.counter == FPS) {
+				this.next = this.bg;
+			}
+		}
+	}
+	
+	function render(rc) {
+		if (this.bg == null) {
+			GFX.Draw.fill(255, 255, 255);
+		} else {
+			this.bg.render(rc);
+			opacity = Math.ensureRange(255 - 255 * this.counter / FPS, 0, 255);
+			GFX.Draw.rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 255, 255, 255, opacity);
+		}
+	}
+}

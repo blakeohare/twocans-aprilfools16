@@ -1,0 +1,27 @@
+import GFX;
+
+class ImageLibrary {
+	static field images = {};
+	static field imagesFlipped = {};
+	
+	constructor() { assert(false); }
+	
+	static function get(path, flipped = false) {
+		lookup = flipped ? ImageLibrary.images : ImageLibrary.imagesFlipped;
+		img = lookup.get(path);
+		if (img == null) {
+			if (flipped) {
+				img = ImageLibrary.get(path);
+				img = img.flip(true, false);
+			} else {
+				rpath = 'images/' + path;
+				if (!rpath.endsWith('.png')) {
+					rpath += '.png';
+				}
+				img = ImageLoader.fromResource(rpath).getImage();
+			}
+			lookup[path] = img;
+		}
+		return img;
+	}
+}

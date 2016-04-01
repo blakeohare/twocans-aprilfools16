@@ -1,0 +1,170 @@
+import Web;
+import Math;
+import GFX;
+
+
+enum Mode {
+	
+	NONE,
+	
+	FALLS_DOWN, // T
+	SHIVERS, // W
+	BOMB_EXPLODES, // O
+	DRAW_ON_SCREEN, // C
+	RUNS_AROUND, // A
+	BLAKE_SHRINKS, // N
+	INVERT_COLORS, // S
+	
+	DONT_GET_BANNED, // S
+	CREDITS, // T
+	SCENERY, // R
+	TODO_IMPLEMENT, // I
+	TOTORO, // N
+	BANNED, // G
+}
+
+enum LetterFallModes {
+	FALLING_DOWN,
+	HITTING_PLAYER,
+	FALLING_BACK,
+	BOTH_BACK,
+}
+
+const GROUND_Y = SCREEN_HEIGHT * 2 / 3;
+const LETTERS_Y = SCREEN_HEIGHT / 3;
+
+class MainScene : AbstractScene {
+	field mode = Mode.NONE;
+	field modeCounter = 0;
+	field blake = null;
+	field letters = [];
+	field sprites = null;
+	field otherSprites = [];
+	field activeLetter = null;
+	field queuedMode = null;
+	
+	constructor() : base() {
+	
+		this.blake = new Sprite(SpriteType.BLAKE, SCREEN_WIDTH / 2, GROUND_Y);
+		this.blake.canHitTest = true;
+		
+		this.restoreLetters();
+	}
+	
+	function restoreLetters() {
+		this.sprites = null;
+		
+		this.letters.clear();
+		
+		chars = 'TWOCANS&STRING';
+		x = SCREEN_WIDTH / 6;
+		modes = [
+			Mode.FALLS_DOWN, // T
+			Mode.SHIVERS, // W
+			Mode.BOMB_EXPLODES, // O
+			
+			Mode.DRAW_ON_SCREEN, // C
+			Mode.RUNS_AROUND, // A
+			Mode.BLAKE_SHRINKS, // N
+			Mode.INVERT_COLORS, // S
+			
+			Mode.NONE, // &
+			
+			Mode.DONT_GET_BANNED, // S
+			Mode.CREDITS, // T
+			Mode.SCENERY, // R
+			Mode.TODO_IMPLEMENT, // I
+			Mode.TOTORO, // N
+			Mode.BANNED, // G
+		];
+		for (i = 0; i < chars.length; ++i) {
+			c = chars[i];
+			sprite = new Sprite(SpriteType.LETTER, x, LETTERS_Y);
+			sprite.letterMode = modes[i];
+			sprite.letter = c;
+			sprite.canHitTest = c != '&';
+			x += SCREEN_WIDTH * 2 / (chars.length * 3);
+			this.letters.add(sprite);
+		}
+	}
+	
+	function isModeLocked() {
+		// TODO: return true in instances where you want to prevent the user from 
+		// progressing to another mode.
+		return false;
+	}
+	
+	function launchMode(mode) {
+		
+	}
+	
+	function endMode() {
+		
+	}
+	
+	function update(events) {
+		for (event : events) {
+			if (!this.isModeLocked()) {
+				if (event.type == EventType.MOUSE_LEFT_DOWN) {
+					sprite = this.hitTestSprites(event.x, event.y);
+					if (sprite != null) {
+						if (sprite.type == SpriteType.BLAKE) {
+							Web.launchBrowser('http://twocansandstring.com/normal');
+						} else if (sprite.type == SpriteType.LETTER) {
+							if (this.mode == sprite.letterMode) {
+								if (this.mode == Mode.NONE) {
+									this.launchMode(sprite.letterMode);
+								} else {
+									this.endMode();
+									this.queuedMode = sprite.letterMode;
+								}
+							}
+						}
+					}
+				}
+				
+				switch (this.mode) {
+					case Mode.SCENERY:
+						// TODO: process scenery events
+						break;
+						
+					case Mode.DRAW_ON_SCREEN:
+						// TODO: process draw events
+						break;
+					
+					default: break;
+				}
+			}
+		}
+	}
+	
+	function hitTestSprites(x, y) {
+		for (sprite : this.getAllSprites()) {
+			if (sprite.canHitTest) {
+				dx = sprite.x - x;
+				dy = sprite.y - y;
+				if (dx ** 2 + dy ** 2 < 20 ** 2) {
+					return sprite;
+				}
+			}
+		}
+		return null;
+	}
+	
+	function getAllSprites() {
+		if (this.sprites == null) {
+			this.sprites = [this.blake];
+			this.sprites.concat(this.letters);
+			this.sprites.concat(this.otherSprites);
+		}
+		return this.sprites;
+	}
+	
+	function render(rc) {
+		GFX.Draw.fill(255, 255, 255);
+		
+		for (sprite : this.getAllSprites()) {
+			sprite.render(rc);
+		}
+	}
+}
