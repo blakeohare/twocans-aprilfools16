@@ -159,6 +159,7 @@ class MainScene : AbstractScene {
 			
 			default:
 				this.mode = Mode.NONE;
+				this.state = null;
 				break;
 		}
 	}
@@ -298,6 +299,24 @@ class MainScene : AbstractScene {
 							break;
 					}
 					
+					this.stateCounter++;
+					break;
+				
+				case Mode.CREDITS:
+					if (this.state == null) {
+						this.state = 1;
+						this.stateCounter = 0;
+					}
+					
+					if (this.stateCounter >= FPS * 3) {
+						this.state++;
+						this.stateCounter = 0;
+					}
+					
+					if (this.state >= 6) {
+						this.state = null;
+						this.mode = Mode.NONE;
+					}
 					this.stateCounter++;
 					break;
 				
@@ -537,11 +556,19 @@ class MainScene : AbstractScene {
 			letter.inversion = inversionAmount;
 		}
 		
+		msg = null;
 		if (this.mode == Mode.DONT_GET_BANNED) {
 			if ((rc / 7) % 2 == 0) {
-				img = ImageLibrary.get('messages/dont_press_g');
-				img.draw((SCREEN_WIDTH - img.width) / 2, SCREEN_HEIGHT / 2);
+				msg = ImageLibrary.get('messages/dont_press_g');
 			}
+		} else if (this.mode == Mode.CREDITS) {
+			if (this.stateCounter < 2.5 * FPS) {
+				msg = ImageLibrary.get('messages/credits' + this.state);
+			}
+		}
+		
+		if (msg != null) {
+			msg.draw((SCREEN_WIDTH - msg.width) / 2, SCREEN_HEIGHT / 2);
 		}
 		
 		x = 0;
