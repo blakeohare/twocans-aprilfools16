@@ -4,6 +4,7 @@ import GFX;
 enum SpriteType {
 	LETTER,
 	PERSON,
+	TOTORO,
 }
 
 class Sprite {
@@ -27,6 +28,7 @@ class Sprite {
 	field homeX;
 	field homeY;
 	field isFrozen = false;
+	field dead = false;
 	
 	static field PERSON_FLAVORS = 'person1 person2 person3 person4'.split(' ');
 	
@@ -46,6 +48,7 @@ class Sprite {
 			case SpriteType.LETTER:
 				this.updateLetter(scene);
 				break;
+			default: break;
 		}
 		
 		if (this.dx != 0) {
@@ -118,7 +121,14 @@ class Sprite {
 				return this.renderPerson(rc, x, y);
 			case SpriteType.LETTER:
 				return this.renderLetter(rc, x, y);
+			case SpriteType.TOTORO:
+				return this.renderTotoro(rc, x, y);
 		}
+	}
+	
+	function renderTotoro(rc, x, y) {
+		img = ImageLibrary.get('characters/running_char' + ((rc / 2) % 2 + 1));
+		img.draw(this.x - img.width / 2, this.y - img.height);
 	}
 	
 	function renderPerson(rc, x, y) {

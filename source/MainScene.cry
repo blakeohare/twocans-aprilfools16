@@ -44,6 +44,7 @@ class MainScene : AbstractScene {
 	field queuedMode = null;
 	field tFallState = null; // { falling, pFalling, return }
 	field state = null;
+	field totoro = null;
 	
 	constructor() : base() {
 	
@@ -119,6 +120,7 @@ class MainScene : AbstractScene {
 		switch (this.mode) {
 			case Mode.FALLS_DOWN:
 			case Mode.RUNS_AROUND:
+			case Mode.TOTORO:
 				// just wait for it to end.
 				break;
 				
@@ -304,11 +306,43 @@ class MainScene : AbstractScene {
 						letter.renderOffsetXY[1] = y;
 					}
 					break;
+				
+				case Mode.TOTORO:
+					if (this.state != 'ttr-run') {
+						this.state = 'ttr-run';
+						this.totoro = new Sprite(SpriteType.TOTORO, SCREEN_WIDTH + 40, GROUND_Y);
+						this.otherSprites.add(this.totoro);
+						this.sprites = null;
+					}
+					
+					this.totoro.x -= 10;
+					
+					// remove sprite from scene once it falls off the left side of the screen.
+					if (this.totoro.x < -30) {
+						this.totoro.dead = true; // in my 20 years of being a programmer, this is, by far, the saddest line of code I have ever written.
+						this.mode = Mode.NONE;
+						this.state = null;
+					}
+					
+					break;
 			}
 		}
 		
 		for (sprite : this.getAllSprites()) {
 			sprite.update(this);
+		}
+		
+		if (this.otherSprites.length > 0) {
+			newSprites = [];
+			for (sprite : this.otherSprites) {
+				if (!sprite.dead) {
+					newSprites.add(sprite);
+				}
+			}
+			if (newSprites.length != this.otherSprites) {
+				this.sprites = null;
+			}
+			this.otherSprites = newSprites;
 		}
 		
 		this.modeCounter++;
