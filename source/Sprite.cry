@@ -132,7 +132,7 @@ class Sprite {
 	}
 	
 	function renderPerson(rc, x, y) {
-		isWalk = this.isMoving && ( (rc / 2) % 2) == 0;
+		isWalk = this.isMoving && ( (rc / 4) % 2) == 0;
 		
 		img = ImageLibrary.get('characters/' + this.personFlavor + '_' + (isWalk ? 'stand' : 'walk'), !this.isLeftFacing);
 		left = x - img.width / 2;
