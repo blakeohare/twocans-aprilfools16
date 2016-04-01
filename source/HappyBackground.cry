@@ -1,4 +1,5 @@
 import GFX;
+import Math;
 import Random;
 
 
@@ -32,7 +33,12 @@ class HappyBackground {
 					break;
 				case SpriteType.BIRD:
 					x = Random.randomInt(200, SCREEN_WIDTH - 200);
-					y = Random.randomInt(50, GROUND_Y - 150);
+					while (true) {
+						y = Random.randomInt(50, GROUND_Y - 150);
+						if (abs(y - LETTERS_Y) > 40) {
+							break;
+						}
+					}
 					mode = Random.randomBool() ? 'left' : 'right';
 					break;
 			}
@@ -48,6 +54,18 @@ class HappyBackground {
 	}
 	
 	function render() {
+		grass = ImageLibrary.get('grass');
+		y = GROUND_Y;
+		while (y < SCREEN_HEIGHT) {
+			for (x = 0; x < SCREEN_WIDTH; x += grass.width) {
+				grass.draw(x, y);
+			}
+			y += grass.height;
+		}
 		
+		progress = 1.0 - 1.0 * this.counter / FPS;
+		width = floor(progress * SCREEN_WIDTH / 2);
+		GFX.Draw.rectangle(0, 0, width, SCREEN_HEIGHT, 255, 255, 255);
+		GFX.Draw.rectangle(SCREEN_WIDTH - width, 0, width, SCREEN_HEIGHT, 255, 255, 255);
 	}
 }
