@@ -12,7 +12,7 @@ enum Mode {
 	BOMB_EXPLODES, // O
 	DRAW_ON_SCREEN, // C
 	RUNS_AROUND, // A
-	BLAKE_SHRINKS, // N
+	PERSON_SHRINKS, // N
 	INVERT_COLORS, // S
 	
 	DONT_GET_BANNED, // S
@@ -36,7 +36,7 @@ const LETTERS_Y = SCREEN_HEIGHT / 3;
 class MainScene : AbstractScene {
 	field mode = Mode.NONE;
 	field modeCounter = 0;
-	field blake = null;
+	field person = null;
 	field letters = [];
 	field sprites = null;
 	field otherSprites = [];
@@ -45,8 +45,8 @@ class MainScene : AbstractScene {
 	
 	constructor() : base() {
 	
-		this.blake = new Sprite(SpriteType.BLAKE, SCREEN_WIDTH / 2, GROUND_Y);
-		this.blake.canHitTest = true;
+		this.person = new Sprite(SpriteType.PERSON, SCREEN_WIDTH / 2, GROUND_Y);
+		this.person.canHitTest = true;
 		
 		this.restoreLetters();
 	}
@@ -65,7 +65,7 @@ class MainScene : AbstractScene {
 			
 			Mode.DRAW_ON_SCREEN, // C
 			Mode.RUNS_AROUND, // A
-			Mode.BLAKE_SHRINKS, // N
+			Mode.PERSON_SHRINKS, // N
 			Mode.INVERT_COLORS, // S
 			
 			Mode.NONE, // &
@@ -113,7 +113,7 @@ class MainScene : AbstractScene {
 				if (event.type == EventType.MOUSE_LEFT_DOWN) {
 					sprite = this.hitTestSprites(event.x, event.y);
 					if (sprite != null) {
-						if (sprite.type == SpriteType.BLAKE) {
+						if (sprite.type == SpriteType.PERSON) {
 							Web.launchBrowser('http://twocansandstring.com/normal');
 						} else if (sprite.type == SpriteType.LETTER) {
 							if (this.mode == sprite.letterMode) {
@@ -141,6 +141,10 @@ class MainScene : AbstractScene {
 				}
 			}
 		}
+		
+		for (sprite : this.getAllSprites()) {
+			sprite.update(this);
+		}
 	}
 	
 	function hitTestSprites(x, y) {
@@ -158,7 +162,7 @@ class MainScene : AbstractScene {
 	
 	function getAllSprites() {
 		if (this.sprites == null) {
-			this.sprites = [this.blake];
+			this.sprites = [this.person];
 			this.sprites.concat(this.letters);
 			this.sprites.concat(this.otherSprites);
 		}

@@ -3,7 +3,7 @@ import GFX;
 
 enum SpriteType {
 	LETTER,
-	BLAKE,
+	PERSON,
 }
 
 class Sprite {
@@ -33,8 +33,8 @@ class Sprite {
 	
 	function update(scene) {
 		switch (this.type) {
-			case SpriteType.BLAKE:
-				this.updateBlake(scene);
+			case SpriteType.PERSON:
+				this.updatePerson(scene);
 				break;
 			case SpriteType.LETTER:
 				this.updateLetter(scene);
@@ -53,7 +53,7 @@ class Sprite {
 		this.dy = 0;
 	}
 	
-	static field BLAKE_MODES = [
+	static field PERSON_MODES = [
 		'left',
 		'right',
 		'left',
@@ -66,7 +66,7 @@ class Sprite {
 		
 	}
 	
-	function updateBlake(scene) {
+	function updatePerson(scene) {
 		if (this.specialMode != null) {
 			switch (this.specialMode) {
 				case 'left':
@@ -85,14 +85,14 @@ class Sprite {
 		
 		if (this.specialModeCounter++ >= FPS * 2) {
 			this.isSleeping = false;
-			this.changeBlakeMode();
+			this.changePersonMode();
 		}
 	}
 	
-	function changeBlakeMode() {
-		Sprite.BLAKE_MODES.shuffle();
+	function changePersonMode() {
+		Sprite.PERSON_MODES.shuffle();
 		this.specialModeCounter = 0;
-		this.specialMode = Sprite.BLAKE_MODES[0];
+		this.specialMode = Sprite.PERSON_MODES[0];
 	}
 	
 	function render(rc) {
@@ -100,14 +100,14 @@ class Sprite {
 		y = floor(this.y);
 		
 		switch (this.type) {
-			case SpriteType.BLAKE:
-				return this.renderBlake(rc, x, y);
+			case SpriteType.PERSON:
+				return this.renderPerson(rc, x, y);
 			case SpriteType.LETTER:
 				return this.renderLetter(rc, x, y);
 		}
 	}
 	
-	function renderBlake(rc, x, y) {
+	function renderPerson(rc, x, y) {
 		isWalk = this.isMoving && ( (rc / 2) % 2) == 0;
 		img = ImageLibrary.get('characters/' + this.personFlavor + '_' + (isWalk ? 'stand' : 'walk'), this.isLeftFacing);
 		img.draw(x - 30, y - img.height);

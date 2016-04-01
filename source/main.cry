@@ -1,7 +1,7 @@
 import Game;
 
 const FPS = 30;
-const SCREEN_WIDTH = 800;
+const SCREEN_WIDTH = 780;
 const SCREEN_HEIGHT = 500;
 
 function main() {
