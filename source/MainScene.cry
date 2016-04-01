@@ -187,6 +187,9 @@ class MainScene : AbstractScene {
 						
 					case Mode.DRAW_ON_SCREEN:
 						
+						if (this.drawBg == null) {
+							this.drawBg = new DrawingBackground();
+						}
 						if (event.type == EventType.MOUSE_MOVE) {
 							if (this.drawBg.isPressed) {
 								this.drawBg.draw(event.x, event.y);
@@ -207,12 +210,6 @@ class MainScene : AbstractScene {
 		
 		if (this.mode != null) {
 			switch (this.mode) {
-				
-				case Mode.DRAW_ON_SCREEN:
-					if (this.drawBg == null) {
-						this.drawBg = new DrawingBackground();
-					}
-					break;
 				
 				case Mode.FALLS_DOWN:
 					
