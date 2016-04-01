@@ -115,12 +115,17 @@ class MainScene : AbstractScene {
 	// each mode is responsible for setting this.mode = Mode.NONE, as it may be asynchronous.
 	function endMode() {
 		switch (this.mode) {
+			case Mode.FALLS_DOWN:
+				// just wait for it to end.
+				break;
+				
 			case Mode.SHIVERS:
 				for (letter : this.letters) {
 					letter.renderOffsetXY = null;
 				}
 				this.mode = Mode.NONE;
 				break;
+				
 				
 			default:
 				this.mode = Mode.NONE;
@@ -187,7 +192,7 @@ class MainScene : AbstractScene {
 					switch (this.tFallState) {
 						case 'falling':
 							if (abs(this.letters[0].y - GROUND_Y) < 10) {
-								if (abs(this.letters[0].x - this.person.x) < 20) {
+								if (abs((this.letters[0].x - 20) - this.person.x) < 40) {
 									this.tFallState = 'pFalling';
 									this.person.isFrozen = true;
 									this.person.specialMode = null;
