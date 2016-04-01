@@ -16,7 +16,7 @@
 	
 	<target name="js_remote">
 		<platform>js</platform>
-		<jsfileprefix>/demos/firedodge/</jsfileprefix>
+		<jsfileprefix>/april/</jsfileprefix>
 	</target>
 	
 	<target name="windows">
