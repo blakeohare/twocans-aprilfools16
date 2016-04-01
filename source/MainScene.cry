@@ -12,7 +12,7 @@ enum Mode {
 	BOMB_EXPLODES, // O
 	DRAW_ON_SCREEN, // C
 	RUNS_AROUND, // A
-	PERSON_SHRINKS, // N
+	PERSON_CHANGES, // N
 	INVERT_COLORS, // S
 	
 	DONT_GET_BANNED, // S
@@ -65,7 +65,7 @@ class MainScene : AbstractScene {
 			
 			Mode.DRAW_ON_SCREEN, // C
 			Mode.RUNS_AROUND, // A
-			Mode.PERSON_SHRINKS, // N
+			Mode.PERSON_CHANGES, // N
 			Mode.INVERT_COLORS, // S
 			
 			Mode.NONE, // &
@@ -114,7 +114,7 @@ class MainScene : AbstractScene {
 					sprite = this.hitTestSprites(event.x, event.y);
 					if (sprite != null) {
 						if (sprite.type == SpriteType.PERSON) {
-							Web.launchBrowser('http://twocansandstring.com/normal');
+							Web.launchBrowser('http://twocansandstring.com');
 						} else if (sprite.type == SpriteType.LETTER) {
 							if (this.mode == sprite.letterMode) {
 								if (this.mode == Mode.NONE) {
@@ -149,10 +149,9 @@ class MainScene : AbstractScene {
 	
 	function hitTestSprites(x, y) {
 		for (sprite : this.getAllSprites()) {
-			if (sprite.canHitTest) {
-				dx = sprite.x - x;
-				dy = sprite.y - y;
-				if (dx ** 2 + dy ** 2 < 20 ** 2) {
+			if (sprite.canHitTest && sprite.lastImageBounds != null) {
+				bounds = sprite.lastImageBounds;
+				if (x > bounds[0] && x < bounds[2] && y > bounds[1] && y < bounds[3]) {
 					return sprite;
 				}
 			}
