@@ -1,3 +1,6 @@
+import Graphics2D;
+import Math;
+
 const DRAW_BG_WIDTH = 50;
 const DRAW_BG_HEIGHT = 30;
 
@@ -41,7 +44,7 @@ class DrawingBackground {
 			for (y : this.rows) {
 				if (col[y]) {
 					yCoord = this.yCoords[y];
-					GFX.Draw.rectangle(xCoord, yCoord, DRAW_BG_TILE_WIDTH, DRAW_BG_TILE_HEIGHT, 80, 120, 255);
+					Graphics2D.Draw.rectangle(xCoord, yCoord, DRAW_BG_TILE_WIDTH, DRAW_BG_TILE_HEIGHT, 80, 120, 255);
 				}
 			}
 		}

@@ -1,8 +1,9 @@
-import GFX;
+import Graphics2D;
 
 class ImageLibrary {
 	static field images = {};
 	static field imagesFlipped = {};
+	static field imageSheet = null;
 	
 	constructor() { assert(false); }
 	
@@ -18,7 +19,8 @@ class ImageLibrary {
 				if (!rpath.endsWith('.png')) {
 					rpath += '.png';
 				}
-				img = ImageLoader.fromResource(rpath).getImage();
+				imgRes = ImageLibrary.imageSheet.getImage(rpath);
+				img = Graphics2D.GraphicsTexture.load(imgRes);
 				if (!rpath.startsWith('images/letters/')) {
 					scale = 2;
 					if (rpath.contains('running_char') || rpath.contains('smoke')) {

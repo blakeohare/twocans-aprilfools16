@@ -1,4 +1,4 @@
-import GFX;
+import Graphics2D;
 import Math;
 import Random;
 
@@ -65,7 +65,7 @@ class HappyBackground {
 		
 		progress = 1.0 - 1.0 * this.counter / FPS;
 		width = floor(progress * SCREEN_WIDTH / 2);
-		GFX.Draw.rectangle(0, 0, width, SCREEN_HEIGHT, 255, 255, 255);
-		GFX.Draw.rectangle(SCREEN_WIDTH - width, 0, width, SCREEN_HEIGHT, 255, 255, 255);
+		Graphics2D.Draw.rectangle(0, 0, width, SCREEN_HEIGHT, 255, 255, 255);
+		Graphics2D.Draw.rectangle(SCREEN_WIDTH - width, 0, width, SCREEN_HEIGHT, 255, 255, 255);
 	}
 }

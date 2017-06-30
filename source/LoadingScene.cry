@@ -1,5 +1,6 @@
+import Graphics2D;
+import ImageResources;
 import Math;
-import GFX;
 
 class LoadingScene : AbstractScene {
 	field loader;
@@ -7,12 +8,13 @@ class LoadingScene : AbstractScene {
 	field counter = 0;
 	
 	constructor() : base() {
-		this.loader = GFX.ImageSheetLoader.fromIds('everything');
+		this.loader = ImageResources.ImageSheet.loadFromResourcesAsync('everything');
 	}
 	
 	function update(events) {
 		if (this.loader.isDone()) {
 			this.bg = new MainScene();
+			ImageLibrary.imageSheet = this.loader;
 		}
 		
 		if (this.bg != null) {
@@ -25,11 +27,11 @@ class LoadingScene : AbstractScene {
 	
 	function render(rc) {
 		if (this.bg == null) {
-			GFX.Draw.fill(255, 255, 255);
+			Graphics2D.Draw.fill(255, 255, 255);
 		} else {
 			this.bg.render(rc);
 			opacity = Math.ensureRange(255 - 255 * this.counter / FPS, 0, 255);
-			GFX.Draw.rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 255, 255, 255, opacity);
+			Graphics2D.Draw.rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 255, 255, 255, opacity);
 		}
 	}
 }

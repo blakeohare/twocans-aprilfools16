@@ -1,5 +1,5 @@
 import Math;
-import GFX;
+import Random;
 
 enum SpriteType {
 	LETTER,

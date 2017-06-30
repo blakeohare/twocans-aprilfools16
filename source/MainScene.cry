@@ -1,7 +1,7 @@
 import Audio;
-import Web;
+import Graphics2D;
 import Math;
-import GFX;
+import Web;
 
 
 enum Mode {
@@ -573,10 +573,10 @@ class MainScene : AbstractScene {
 			}
 			inversionAmount = ensureRange(inversionAmount, 0, 255);
 			c = 255 - inversionAmount;
-			GFX.Draw.fill(c, c, c);
+			Graphics2D.Draw.fill(c, c, c);
 		} else {
 			inversionAmount = 0;
-			GFX.Draw.fill(255, 255, 255);
+			Graphics2D.Draw.fill(255, 255, 255);
 		}
 		
 		for (letter : this.letters) {
