@@ -1,4 +1,5 @@
 import Audio;
+import Game;
 import Graphics2D;
 import Math;
 import Web;
